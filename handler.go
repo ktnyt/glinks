@@ -16,7 +16,6 @@ func init() {
 
 func handler(c echo.Context) error {
 	queries := strings.Split(c.Param("query"), ",")
-	format := c.QueryParam("format")
 
 	var converted []string
 
@@ -36,7 +35,7 @@ func handler(c echo.Context) error {
 		return err
 	}
 
-	if format == "json" {
+	if c.Request().Header.Get("Accept") == "application/json" {
 		var out []glinksOut
 
 		for _, item := range list {
