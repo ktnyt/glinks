@@ -101,7 +101,7 @@ func (p proteinNameGroup) ToGlinks() (list []glinksLink) {
 		list = append(list, createGlinksLink("Short Name", p.Origin, "", name))
 	}
 
-	for _, ecNumber := range p.ShortName {
+	for _, ecNumber := range p.EcNumber {
 		list = append(list, createGlinksLink("EC Number", p.Origin, "", ecNumber))
 	}
 
