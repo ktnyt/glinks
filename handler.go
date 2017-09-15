@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -15,25 +14,6 @@ func init() {
 	e.GET("/:query", handler)
 }
 
-func queryToUniprot(query string) ([]string, error) {
-	for k, v := range mappings {
-		var item Mapping
-
-		if err := v.One("ID", query, &item); err != nil {
-			if k == "RefSeq_NT" || k == "RefSeq" {
-				for i := 0; i < 10; i++ {
-					version := fmt.Sprintf("%s.%d", query, i)
-					v.One("ID", version, &item)
-				}
-			}
-		} else {
-			return item.Relations, nil
-		}
-	}
-
-	return nil, errConversionFailed
-}
-
 func handler(c echo.Context) error {
 	queries := strings.Split(c.Param("query"), ",")
 	format := c.QueryParam("format")
@@ -41,7 +21,7 @@ func handler(c echo.Context) error {
 	var converted []string
 
 	for _, query := range queries {
-		ids, err := queryToUniprot(query)
+		ids, err := findMapping(query)
 
 		if err != nil {
 			converted = append(converted, query)

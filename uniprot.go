@@ -260,15 +260,18 @@ func (c commentType) ToGlinks() []glinksLink {
 		item.ID = intactB.ID
 		item.Text = fmt.Sprintf("%s:%s", intactA.IntactID, intactB.IntactID)
 	case "disease":
-		disease := c.Disease[0]
-		item.ID = disease.ID
-		item.Text = fmt.Sprintf(
-			"%s (%s) : %s (%s)",
-			disease.Name,
-			disease.Acronym,
-			disease.Description,
-			c.Text,
-		)
+		var list []glinksLink
+		for _, disease := range c.Disease {
+			text := fmt.Sprintf(
+				"%s (%s) : %s (%s)",
+				disease.Name,
+				disease.Acronym,
+				disease.Description,
+				c.Text,
+			)
+			list = append(list, createGlinksLink(c.Type, disease.ID, "", text))
+		}
+		return list
 	default:
 		item.ID = c.Origin
 		item.Text = c.Text

@@ -16,6 +16,43 @@ type Mapping struct {
 	Relations []string
 }
 
+func findMapping(query string) ([]string, error) {
+	tmp := strings.Split(query, ":")
+
+	if len(tmp) > 1 {
+		k := tmp[0]
+		q := strings.Join(tmp[1:] ,":")
+
+		if v, ok := mappings[k]; ok {
+			var item Mapping
+
+			if err := v.One("ID", q, &item); err == nil {
+				return item.Relations, nil
+			}
+		}
+	}
+
+  for k, v := range mappings {
+    var item Mapping
+
+    if err := v.One("ID", query, &item); err != nil {
+      if k == "RefSeq_NT" || k == "RefSeq" {
+        for i := 0; i < 10; i++ {
+          version := fmt.Sprintf("%s.%d", query, i)
+
+          if err = v.One("ID", version, &item); err == nil {
+						return item.Relations, nil
+					}
+				}
+      }
+    } else {
+      return item.Relations, nil
+    }
+  }
+
+  return nil, errConversionFailed
+}
+
 func createMappings() map[string]*storm.DB {
 	mappingPath := os.Getenv("MAPPING_PATH")
 
