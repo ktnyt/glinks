@@ -91,6 +91,12 @@ type glinks struct {
 	UpdatedAt time.Time
 }
 
+type glinksOut struct {
+	Uniprot string       `json:"uniprot"`
+	Results []glinksLink `json:"results"`
+	
+}
+
 func (g glinks) HTML() string {
 	var body []string
 

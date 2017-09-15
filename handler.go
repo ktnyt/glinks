@@ -37,16 +37,20 @@ func handler(c echo.Context) error {
 	}
 
 	if format == "json" {
-		ret := make(map[string][]glinksLink)
+		var out []glinksOut
 
 		for _, item := range list {
 			for i := range item.Links {
 				item.Links[i].Flag = hasNone
 			}
-			ret[item.ID] = item.Links
+
+			out = append(out, glinksOut{
+				Uniprot: item.ID,
+				Results: item.Links,
+			})
 		}
 
-		return c.JSON(http.StatusOK, ret)
+		return c.JSON(http.StatusOK, out)
 	}
 
 	response := c.Response()
