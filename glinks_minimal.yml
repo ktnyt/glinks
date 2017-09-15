@@ -3,10 +3,11 @@ info:
   version: 2.0.0
   title: G-Links
   description: 'Documentation of the G-Links gene centric data aggregation service. Learn more about [G-Links](http://link.g-language.org/).'
-  termsOfService: http://link.g-language.org/
+  termsOfService: http://link.g-language.org
   contact:
     name: Kotone Itaya
     email: kotone@sfc.keio.ac.jp
+    x-role: responsible developer
 servers:
   - url: 'http://link.g-language.org/v2'
     description: 'Development server'
